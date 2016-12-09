@@ -56,7 +56,6 @@ class SomView : View() {
                     setOnAction { SomApp.toSkip += 200 }
                     prefWidth = defaultWidth
                     padding = Insets(20.0)
-
                 }
 
                 field("Number of Cities") {

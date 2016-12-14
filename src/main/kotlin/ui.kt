@@ -8,6 +8,11 @@ import javafx.geometry.Insets
 import tornadofx.*
 
 class SomApp : App() {
+    init {
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            throwable.printStackTrace()
+        }
+    }
     override val primaryView = SomView::class
     companion object {
         lateinit var somThread: Thread

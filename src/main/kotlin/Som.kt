@@ -45,8 +45,8 @@ open class Som(val cols: Int, val rows: Int, val weightDim: Int) {
     }
 
     private fun neighbourhood(distFromBest: Double, iteration: Int): Double {
-        if (distFromBest > 5 - sqrt(iteration)/20) return 0.0
-        val sigma = max(10.0/sqrt(iteration), 0.1)
+//        if (distFromBest > 5 - sqrt(iteration)/4000) return 0.0
+        val sigma = 5*max(exp(-iteration/1000.0), 0.2)
         val mu = 0.0
         return 1 / (sqrt(2 * sigma * sigma * PI)) * exp(-(golem.pow(distFromBest - mu, 2)) / (2 * sigma * sigma))
     }

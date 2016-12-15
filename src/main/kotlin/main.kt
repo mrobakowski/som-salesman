@@ -1,6 +1,7 @@
 import golem.matrix.Matrix
 import golem.plot
 import golem.title
+import javafx.application.Platform
 import java.util.*
 
 
@@ -8,7 +9,7 @@ fun run() {
     with(SomApp) {
         val som = RingSom(numRing.toInt(), 2)
 
-        val cities = ArrayList<Matrix<Double>>(10).apply {
+        val cities = ArrayList<Matrix<Double>>(numCities.toInt()).apply {
             for (_c in 0..numCities - 1)
                 add(random(2))
         }
@@ -16,7 +17,8 @@ fun run() {
         val citiesXs = cities.map { it[0] }
         val citiesYs = cities.map { it[1] }
 
-        var iteration = 1
+        Platform.runLater { SomApp.iteration = 1 }
+        var iteration = 1L
         while (runs) {
             if(updates) {
                 remSeries("Route", "City")
@@ -30,19 +32,20 @@ fun run() {
 
                 Collections.shuffle(cities)
                 for (city in cities) {
-                    som.update(city, iteration)
+                    som.update(city, iteration.toInt())
                 }
 
                 while (toSkip > 0) {
                     Collections.shuffle(cities)
                     for (city in cities) {
-                        som.update(city, iteration)
+                        som.update(city, iteration.toInt())
                     }
                     iteration++
                     toSkip--
                 }
-
                 iteration++
+                val i = iteration
+                Platform.runLater { SomApp.iteration = i }
             }
             Thread.sleep(100)
         }

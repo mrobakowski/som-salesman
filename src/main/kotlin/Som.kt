@@ -6,8 +6,13 @@ open class Som(val cols: Int, val rows: Int, val weightDim: Int) {
     val nodes = ArrayList<ArrayList<Node>>(rows).apply {
         for (row in 0..rows - 1)
             add(ArrayList<Node>(cols).apply {
-                for (col in 0..cols - 1)
-                    add(Node(random(weightDim), col to row))
+                for (col in 0..cols - 1) {
+                    val angle = (2 * PI / cols) * col
+                    val x = cos(angle)
+                    val y = sin(angle)
+
+                    add(Node(mat[x, y] * 0.05, col to row))
+                }
             })
     }
 
@@ -40,15 +45,13 @@ open class Som(val cols: Int, val rows: Int, val weightDim: Int) {
     }
 
     private fun learningRate(iteration: Int): Double {
-//        return min(1.0 - 1.0/iteration, 0.8)
         return min(0.8 / max(sqrt(iteration)/20, 1), 0.1)
     }
 
     private fun neighbourhood(distFromBest: Double, iteration: Int): Double {
-//        if (distFromBest > 5 - sqrt(iteration)/4000) return 0.0
-        val sigma = 5*max(exp(-iteration/1000.0), 0.2)
+        val sigma = SomApp.neighbourhoodMultiplier*max(exp(-iteration/1000.0), 0.2)
         val mu = 0.0
-        return 1 / (sqrt(2 * sigma * sigma * PI)) * exp(-(golem.pow(distFromBest - mu, 2)) / (2 * sigma * sigma))
+        return 1 / (sqrt(2 * sigma * sigma * PI)) * exp(-(pow(distFromBest - mu, 2)) / (2 * sigma * sigma))
     }
 
     private fun findBest(input: Matrix<Double>): Node {
